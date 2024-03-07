@@ -88,6 +88,10 @@ fn default_main(script_path: &str, args: &[String]) -> Result<()> {
     Err(error)
 }
 
+pub fn run_script(script_path: &str, args: &[String]) -> Result<()> {
+    default_main(script_path, args)
+}
+
 pub fn run() -> Result<()> {
     let args: Vec<String> = std::env::args().collect();
     let opts = opt_from_args(&args);
