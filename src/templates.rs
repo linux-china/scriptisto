@@ -23,7 +23,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use scrawl::Contents;
 
-const TEMPLATES: Dir = include_dir!("./data/templates/");
+const TEMPLATES: Dir = include_dir!("$CARGO_MANIFEST_DIR/data/templates/");
 
 #[derive(Debug, PartialEq, Eq)]
 enum Source {
