@@ -21,6 +21,7 @@ use std::fmt::Debug;
 use std::fs::File;
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use scrawl::Contents;
 
 const TEMPLATES: Dir = include_dir!("./data/templates/");
 
@@ -170,7 +171,7 @@ fn print_templates(templates: &TemplateMap) {
                     Source::BuiltIn => "",
                     Source::Custom => "yes",
                 }
-                .to_string(),
+                    .to_string(),
                 filename_extension(&v.filename),
             ]
         })
@@ -215,11 +216,10 @@ pub fn write_template(filename: &str, content: &str) -> Result<()> {
 
 pub fn edit(initial_value: &str, filename: &str) -> Result<()> {
     let extension = filename_extension(filename);
-    let editor = scrawl::editor::new()
-        .extension(&extension)
-        .contents(initial_value);
+    let mut editor = scrawl::editor::new();
+    let editor = editor.ext(&extension);
 
-    let new_value = editor.open().unwrap();
+    let new_value = editor.open(Contents::FromString(&initial_value)).unwrap().to_string().unwrap();
 
     if new_value.trim() == initial_value.trim() {
         println!("No changes were made during editing.");
