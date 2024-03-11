@@ -59,14 +59,14 @@ fn docker_create_volume(
 fn docker_volume_cmd(
     volume_name: &str,
     script_cache_path: &Path,
-    run_as_current_user: bool,
+    _run_as_current_user: bool,
     cmd: &str,
     stderr_mode: Stdio,
 ) -> Result<()> {
     let mut vol_cmd = Command::new("docker");
     vol_cmd.args(["run", "-t", "--rm"]);
     #[cfg(target_family = "unix")]
-    if run_as_current_user {
+    if _run_as_current_user {
         unsafe {
             let uid = libc::getuid();
             vol_cmd.args(["-u", &format!("{}", uid)]);
