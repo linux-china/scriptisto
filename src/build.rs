@@ -65,8 +65,12 @@ fn docker_volume_cmd(
 ) -> Result<()> {
     let mut vol_cmd = Command::new("docker");
     vol_cmd.args(["run", "-t", "--rm"]);
+    #[cfg(target_family = "unix")]
     if run_as_current_user {
-        vol_cmd.args(["-u", &format!("{}", users::get_current_uid())]);
+        unsafe {
+            let uid = libc::getuid();
+            vol_cmd.args(["-u", &format!("{}", uid)]);
+        }
     }
     vol_cmd.args([
         "-v",
