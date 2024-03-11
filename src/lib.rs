@@ -14,6 +14,7 @@ mod cfg;
 mod common;
 mod opt;
 mod templates;
+mod exec;
 
 pub fn opt_from_args(args: &[String]) -> opt::Opt {
     let mut args_iter = args.iter();
