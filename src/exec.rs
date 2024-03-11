@@ -15,10 +15,6 @@ use std::ffi::{CString, NulError, OsStr, OsString};
 use std::iter::{IntoIterator, Iterator};
 use std::fmt;
 use std::ptr;
-#[cfg(target_family = "unix")]
-use std::os::unix::ffi::OsStrExt;
-#[cfg(target_family = "windows")]
-use std::os::windows::ffi::OsStrExt;
 
 /// Represents an error calling `exec`.
 ///
@@ -142,6 +138,7 @@ pub struct Command {
     argv: Vec<OsString>,
 }
 
+#[allow(dead_code)]
 impl Command {
     /// Create a new command builder, specifying the program to run.  The
     /// program will be searched for using the usual rules for `PATH`.
