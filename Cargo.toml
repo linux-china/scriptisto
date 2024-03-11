@@ -35,7 +35,6 @@ scriptisto = { path = "/usr/bin/scriptisto" }
 
 [dependencies]
 dirs = '5.0'
-exec = '0.3'
 anyhow = '1'
 include_dir = '0.7'
 log = '0.4'
@@ -45,10 +44,11 @@ serde_yaml='0.9'
 md5="0.7"
 prettytable-rs="0.10"
 scrawl="2"
-users="0.11"
 walkdir="2"
 number_prefix="0.4"
 clap = { version = "4.5", features = ["derive"] }
+errno = "0.3"
+libc = "0.2.153"
 
 [dependencies.env_logger]
 default-features = false
