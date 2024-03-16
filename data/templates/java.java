@@ -1,4 +1,4 @@
-#!/usr/bin/env scriptisto
+///usr/bin/env scriptisto "$0" "$@" ; exit $?
 
 // scriptisto-begin
 // script_src: src/main/java/script/Script.java
