@@ -1,12 +1,11 @@
-#!/usr/bin/env scriptisto
+///usr/bin/env scriptisto "$0" "$@" ; exit $?
 
 package main
 
 // scriptisto-begin
 // script_src: main.go
-// build_once_cmd: go get github.com/fatih/color
-// build_cmd: go build -o script
-// replace_shebang_with: //
+// deps: ["github.com/fatih/color v1.16.0"]
+// build_cmd: go build
 // scriptisto-end
 
 import "github.com/fatih/color"
