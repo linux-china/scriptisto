@@ -101,9 +101,13 @@ pub fn run() -> Result<()> {
     match opts.cmd {
         None => {
             let mut command_iter = opts.command.iter();
-            let script_src = command_iter.next().ok_or_else(|| {
+            let mut script_src = command_iter.next().ok_or_else(|| {
                 anyhow!("PROBABLY A BUG: script_src must be non-empty if no subcommand found.")
-            })?;
+            })?.clone();
+            // adjust script_src to relative or absolute path
+            if !script_src.starts_with(['.', '/']) {
+                script_src = format!("./{}", script_src);
+            }
             let script_src = common::script_src_to_absolute(Path::new(&script_src))?;
             let args: Vec<String> = command_iter.cloned().collect();
             default_main(&script_src.to_string_lossy(), args.as_slice())
