@@ -94,8 +94,8 @@ fn run_build_command<F>(
     build_mode: opt::BuildMode,
     stderr_mode: F,
 ) -> Result<()>
-where
-    F: Fn() -> Stdio,
+    where
+        F: Fn() -> Stdio,
 {
     if first_run || build_mode == opt::BuildMode::Full {
         if let Some(build_once_cmd) = &cfg.build_once_cmd {
@@ -232,7 +232,7 @@ where
         &PathBuf::from("scriptisto.metadata"),
         String::new().as_bytes(),
     )
-    .context("Cannot write metadata file")?;
+        .context("Cannot write metadata file")?;
 
     Ok(())
 }
@@ -251,7 +251,7 @@ pub fn perform(
     ))?;
     debug!("Path: {:?}", script_path);
     debug!("Cache path: {:?}", script_cache_path);
-    let cfg = cfg::BuildSpec::new(&script_body).context("Cannot parse build spec")?;
+    let mut cfg = cfg::BuildSpec::new(&script_body).context("Cannot parse build spec")?;
 
     let mut metadata_path = script_cache_path.clone();
     metadata_path.push("scriptisto.metadata");
@@ -297,8 +297,8 @@ pub fn perform(
                     let modified_res = metadata_res.as_ref().unwrap().modified();
                     if modified_res.is_ok()
                         && (additional_paths_max_modified.is_none()
-                            || *modified_res.as_ref().unwrap()
-                                > additional_paths_max_modified.unwrap())
+                        || *modified_res.as_ref().unwrap()
+                        > additional_paths_max_modified.unwrap())
                     {
                         additional_paths_max_modified = Some(*modified_res.as_ref().unwrap());
 
@@ -329,12 +329,38 @@ pub fn perform(
     if skip_rebuild {
         debug!("Already compiled, skipping compilation");
     } else {
+        // Write files to cache path
         for file in cfg.files.iter() {
             common::write_bytes(
                 &script_cache_path,
                 &PathBuf::from(&file.path),
                 file.content.as_bytes(),
             )?;
+        }
+        // generate deps file according to language
+        if cfg.script_src.ends_with(".go") {
+            if cfg.files.iter().find(|f| f.path.ends_with("go.mod")).is_none() {
+                let mut deps = vec![];
+                for dep in cfg.deps.iter() {
+                    deps.push(format!("require {}", dep));
+                }
+                let mut go_version = "1.22".to_owned();
+                if !cfg.language.is_empty() {
+                    let parts = cfg.language.trim().split("").collect::<Vec<&str>>();
+                    if parts.len() > 1 {
+                        go_version = parts[1].to_owned();
+                    }
+                }
+                let go_mod_path = script_cache_path.join("go.mod");
+                let go_mod_text = format!("module scriptisto/script\n\ngo {}\n\n{}", go_version, deps.join("\n"));
+                common::write_bytes(&script_cache_path, &go_mod_path, go_mod_text.as_bytes())?;
+                // modify build command to update go modules
+                if let Some(build_cmd) = &cfg.build_cmd {
+                    if !build_cmd.contains("go get -u") {
+                        cfg.build_cmd = Some(format!("go get -u && {}", build_cmd));
+                    }
+                }
+            }
         }
 
         run_build_command(
