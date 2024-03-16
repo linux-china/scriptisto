@@ -31,6 +31,8 @@ pub struct BuildSpec {
     #[serde(default)]
     pub files: Vec<File>,
     #[serde(default)]
+    pub deps: Vec<String>,
+    #[serde(default)]
     pub docker_build: Option<DockerBuild>,
     #[serde(default)]
     pub extra_src_paths: Vec<String>, // paths to directory/file, no wildcards supported
@@ -99,9 +101,12 @@ impl BuildSpec {
         let mut build_spec: BuildSpec = serde_yaml::from_str(&cfg_src.join("\n"))
             .context(format!("Cannot parse config YAML: \n{:#?}", cfg_src))?;
 
-        let replace_shebang_with = build_spec.replace_shebang_with.clone();
+        // check to replace scriptisto shebang or not
         if !script_src.is_empty() {
-            script_src[0] = replace_shebang_with;
+            let first_line = &script_src[0];
+            if first_line.starts_with("#!") && first_line.contains("scriptisto") {
+                script_src[0] = build_spec.replace_shebang_with.clone();
+            }
         }
 
         build_spec.files.push(File {
