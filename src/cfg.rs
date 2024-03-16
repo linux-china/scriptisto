@@ -21,6 +21,10 @@ use std::io::{BufRead, BufReader};
 #[derive(Deserialize, Debug)]
 pub struct BuildSpec {
     pub script_src: String,
+    #[serde(default)]
+    pub language: String,
+    #[serde(default)]
+    pub deps: Vec<String>,
     pub build_cmd: Option<String>,
     pub build_once_cmd: Option<String>,
     #[serde(default = "default_target_bin")]
@@ -30,8 +34,6 @@ pub struct BuildSpec {
     pub replace_shebang_with: String,
     #[serde(default)]
     pub files: Vec<File>,
-    #[serde(default)]
-    pub deps: Vec<String>,
     #[serde(default)]
     pub docker_build: Option<DockerBuild>,
     #[serde(default)]
