@@ -5,7 +5,7 @@ package main
 // scriptisto-begin
 // script_src: main.go
 // deps: ["github.com/fatih/color v1.16.0"]
-// build_cmd: go build
+// build_cmd: go build -o script main.go
 // scriptisto-end
 
 import "github.com/fatih/color"
