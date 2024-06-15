@@ -10,6 +10,7 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/igor-petruk/scriptisto/total?logo=Github&label=Github%20Release%20downloads)
 
 It is a tool to enable writing one file scripts in languages that require compilation, dependencies fetching or preprocessing.
+[![Packaging status](https://repology.org/badge/vertical-allrepos/scriptisto.svg)](https://repology.org/project/scriptisto/versions)
 
 It works as a "shebang" for those scripts, extracting build instructions from comments. If a script is changed, scriptisto rebuilds it and caches the result. If a script was already built, scriptisto immediately delegates to a binary with only <1 ms overhead.
 

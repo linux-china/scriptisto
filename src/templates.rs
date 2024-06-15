@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::editor;
 use crate::opt::TemplatesCommand;
 use anyhow::{anyhow, Context, Result};
 use include_dir::Dir;
@@ -21,9 +22,8 @@ use std::fmt::Debug;
 use std::fs::File;
 use std::io::Write;
 use std::path::{Path, PathBuf};
-use scrawl::Contents;
 
-const TEMPLATES: Dir = include_dir!("$CARGO_MANIFEST_DIR/data/templates/");
+const TEMPLATES: Dir = include_dir!("./data/templates/");
 
 #[derive(Debug, PartialEq, Eq)]
 enum Source {
@@ -215,18 +215,11 @@ pub fn write_template(filename: &str, content: &str) -> Result<()> {
 }
 
 pub fn edit(initial_value: &str, filename: &str) -> Result<()> {
-    let extension = filename_extension(filename);
-    let mut editor = scrawl::editor::new();
-    let editor = editor.ext(&extension);
-
-    let new_value = editor.open(Contents::FromString(&initial_value)).unwrap().to_string().unwrap();
-
-    if new_value.trim() == initial_value.trim() {
-        println!("No changes were made during editing.");
+    if let Some(new_content) = editor::edit(filename, initial_value)? {
+        write_template(filename, &new_content)?;
     } else {
-        write_template(filename, &new_value)?;
+        println!("No changes were made during editing.");
     }
-
     Ok(())
 }
 

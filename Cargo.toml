@@ -14,7 +14,7 @@
 
 [package]
 name = "scriptisto"
-version = "2.1.1"
+version = "2.2.0"
 edition = "2021"
 license = "Apache-2.0"
 description = "A language-agnostic \"shebang interpreter\" that enables you to write scripts in compiled languages."
@@ -34,7 +34,8 @@ buildflags = ["--release"]
 scriptisto = { path = "/usr/bin/scriptisto" }
 
 [dependencies]
-dirs = '5.0'
+dirs = '5'
+exec = '0.3'
 anyhow = '1'
 include_dir = '0.7'
 log = '0.4'
@@ -43,7 +44,7 @@ serde_derive='1.0'
 serde_yaml='0.9'
 md5="0.7"
 prettytable-rs="0.10"
-scrawl="2"
+users="0.11"
 walkdir="2"
 number_prefix="0.4"
 clap = { version = "4.5", features = ["derive"] }
