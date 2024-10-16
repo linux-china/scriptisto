@@ -47,11 +47,11 @@ walkdir="2"
 number_prefix="0.4"
 clap = { version = "4.5", features = ["derive"] }
 errno = "0.3"
-libc = "0.2.153"
+libc = "0.2.159"
 
 [dependencies.env_logger]
 default-features = false
-version = '0'
+version = '0.11'
 
 [package.metadata.deb]
 section = "utils"
