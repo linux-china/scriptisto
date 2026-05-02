@@ -94,7 +94,9 @@ fn default_main(script_path: &str, args: &[String]) -> Result<()> {
     debug!("Running exec {:?}, Args: {:?}", binary, target_argv);
 
     // Scripts can use this to find other build artifacts
-    env::set_var(build::SCRIPTISTO_CACHE_DIR_VAR, script_cache_path);
+    unsafe {
+        env::set_var(build::SCRIPTISTO_CACHE_DIR_VAR, script_cache_path);
+    }
 
     let error = match exec::execvp(&binary, &target_argv) {
         exec::Error::Errno(e) => {
